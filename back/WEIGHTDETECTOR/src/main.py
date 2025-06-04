@@ -40,11 +40,19 @@ import threading
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 serial_data = []
 ser = serial.Serial('COM4', 9600, timeout=1)  # Abrir solo una vez
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # O especifica tu origen
+    allow_credentials=True,
+    allow_methods=["*"],  # O ["POST", "OPTIONS"]
+    allow_headers=["*"],
+)
 def read_serial():
     while True:
         line = ser.readline().decode('utf-8').strip()
@@ -68,3 +76,5 @@ async def send_serial_data(request: Request):
 if __name__ == "__main__":
     threading.Thread(target=read_serial, daemon=True).start()
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    
