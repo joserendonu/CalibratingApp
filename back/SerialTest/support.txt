@@ -1,0 +1,22 @@
+ if (Serial.availableForWrite()) // Si está disponible para escritura
+    {
+        /*Desde el valor 32 empieza los valores*/
+        for (size_t i = 0; i <= 127; i++) // bucle para poder imprimir todos los caracteres ASCII de Arduino
+        {
+            Serial.print("CHAR: ");
+            Serial.write(i); // Caracter
+            Serial.print(" | DEC: ");
+            Serial.print(i); // Decimal
+            Serial.print(" | HEX: ");
+            Serial.print(i, HEX); // Hexadecimal
+            Serial.print(" | OCT: ");
+            Serial.print(i, OCT); // Octa
+            Serial.print(" | BIN: ");
+            Serial.println(i, BIN); // Binario
+            for (size_t i = 0; i < 54; i++) // Bucle para imprimir línea
+            {
+                Serial.print("-");
+            }
+            Serial.println(); // Bajar de línea
+        }
+    }

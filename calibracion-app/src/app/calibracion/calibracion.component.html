@@ -1,0 +1,16 @@
+<p>calibracion works!</p>
+<div style="background:#b3d1e6; padding:20px; border-radius:10px; width:400px;">
+  <h2>Calibración</h2>
+  <div>
+    <label>Peso recibido:</label>
+    <div style="font-size:2em; background:white; padding:10px; border-radius:5px;">
+      {{ recibido[recibido.length-1] || '---' }} Kg
+    </div>
+  </div>
+  <div style="margin-top:20px;">
+    <label>Salida (últimos datos):</label>
+    <textarea rows="6" style="width:100%;" readonly>
+{{ recibido.join('\n') }}
+    </textarea>
+  </div>
+</div>
