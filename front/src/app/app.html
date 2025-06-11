@@ -47,7 +47,7 @@
   }
 </style>
 
-<main>
+<!-- <main>
   <h2 style="text-align:center;">Calibración</h2>
   <div class="calibracion-flex">
     <div>
@@ -73,8 +73,33 @@
     <textarea rows="3" style="width: 100%; font-size: 1.2em;" [(ngModel)]="comando"></textarea>
 
   </div>
+</main> -->
+<main>
+  <h2 style="text-align:center;">Calibraciónnnn</h2>
+  <div class="calibracion-flex">
+    <div>
+      <label><b>Escala</b></label><br>
+      <input type="number" style="width: 80px; font-size: 2em; text-align: right;" value="0.00" disabled /><br>
+      <button style="margin-top: 5px;">Set escala</button><br>
+      <button style="margin-top: 5px;">Set cero</button>
+    </div>
+    <div>
+      <label><b>Peso</b></label><br>
+      <input type="number" style="width: 100px; font-size: 2em; text-align: right;" value="0.000" disabled /> Kg<br>
+      <label style="margin-top: 10px;"><b>Escala</b></label><br>
+      <input type="number" style="width: 80px; font-size: 1.5em; text-align: right;" value="0.00" disabled />
+    </div>
+  </div>
+  <div style="margin-top: 15px;">
+    <label><b>Peso Patrón</b></label>
+    <input type="number" style="width: 60px; font-size: 1.5em; text-align: right;" value="5.0" disabled /> Kg
+    <button style="margin-left: 10px;" (click)="autoCalibrar()">Auto Calibrar</button>
+  </div>
+  <div style="margin-top: 15px;">
+    <label><b>Comando: </b></label><br>
+    <textarea rows="3" style="width: 100%; font-size: 1.2em;" [(ngModel)]="comando"></textarea>
+  </div>
 </main>
-
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
@@ -85,5 +110,3 @@
 
 
 <router-outlet />
-
-
