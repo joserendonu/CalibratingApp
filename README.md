@@ -7,3 +7,7 @@ PARA CAMBIAR LA CONFIGURACIÓN DEL ARDUINO
 - Se instala el arduino IDE
 - Se instala arduino CLI
 - Se siguen los PASOS PARA CONFIGURAR Y SUBIR TU CÓDIGO ARDUINO EN VS CODE
+
+
+BIBLIOTECAS PARA APPS DE ESCRITORIO:
+https://www.youtube.com/watch?v=XgjKa9kkYjc
