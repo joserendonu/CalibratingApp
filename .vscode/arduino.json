@@ -1,0 +1,5 @@
+{
+    "sketch": "SerialTest.ino",
+    "board": "arduino:avr:nano",
+    "port": "COM6"
+}

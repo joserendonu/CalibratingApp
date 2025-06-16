@@ -48,30 +48,37 @@
 </style>
 
 <main>
-  <h2 style="text-align:center;">Calibración</h2>
+  <h2 style="text-align:center;">Calibraciónnnn</h2>
   <div class="calibracion-flex">
     <div>
       <label><b>Escala</b></label><br>
-      <input type="number" style="width: 80px; font-size: 2em; text-align: right;" value="0.00" /><br>
-      <button style="margin-top: 5px;">Set escala</button><br>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+        <button (click)="cambiarEscala()">Set escala</button>
+        <input type="number" [(ngModel)]="nuevaEscala" style="width: 80px; font-size: 2em; text-align: right;" />
+      </div>
       <button style="margin-top: 5px;">Set cero</button>
     </div>
     <div>
       <label><b>Peso</b></label><br>
-      <input type="number" style="width: 100px; font-size: 2em; text-align: right;" value="0.000" /> Kg<br>
+      <input type="number" style="width: 100px; font-size: 2em; text-align: right;" value="0.000" disabled /> Kg<br>
       <label style="margin-top: 10px;"><b>Escala</b></label><br>
-      <input type="number" style="width: 80px; font-size: 1.5em; text-align: right;" value="0.00" />
+      <input type="number" style="width: 80px; font-size: 1.5em; text-align: right;" value="0.00" disabled />
     </div>
   </div>
   <div style="margin-top: 15px;">
     <label><b>Peso Patrón</b></label>
-    <input type="number" style="width: 60px; font-size: 1.5em; text-align: right;" value="5.0" /> Kg
-    <button style="margin-left: 10px;" (click)="autoCalibrar()">Auto Calibrar</button>
+    <input type="number" style="width: 60px; font-size: 1.5em; text-align: right;" value="5.0" disabled /> Kg
   </div>
   <div style="margin-top: 15px;">
     <label><b>Comando: </b></label><br>
-    <textarea rows="3" style="width: 100%; font-size: 1.2em;" [(ngModel)]="comando"></textarea>
 
+    <textarea rows="3" style="width: 100%; font-size: 1.2em;" [(ngModel)]="comando"></textarea>
+    <button style="margin-left: 10px;" (click)="autoCalibrar()">Auto Calibrar</button>
+
+  </div>
+  <div style="margin-top: 15px;">
+    <button style="margin-left: 10px;" (click)="enviarConfiguracion()">CONFIGURACIÓN</button>
+    <button style="margin-left: 10px;" (click)="enviarAuto()">AUTO</button>
   </div>
 </main>
 
@@ -85,5 +92,3 @@
 
 
 <router-outlet />
-
-

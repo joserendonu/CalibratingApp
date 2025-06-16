@@ -3,7 +3,6 @@ enum Mode
     CONFIG,
     AUTO
 };
-
 Mode mode = AUTO;               // Default mode is AUTO
 unsigned long lastSendTime = 0; // Para controlar el tiempo con millis
 int timeSeconds = 2000;         // Tiempo en milisegundos para enviar datos
