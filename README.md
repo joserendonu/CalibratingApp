@@ -32,5 +32,10 @@ https://www.youtube.com/watch?v=XgjKa9kkYjc
 >>>>>>> 6d4ff3ed4a1209c661ceb95daee5420c57fac835
 TAREA 
 CREAR LOGS EN UNA BD(MIENTRAS EN UNA CARPETA )
-- RECIBIR EN la MISMA PESTAÑA(BUIEN PULIDAAAAAAAAAAAA) LOS CODIGOS ESCANEADOS:
-    Para esto como los pesos están entrando por un puerto virtual entonces voy a simular los códigos de barras que envía el escaner SR1000 con un fake method
+
+Ajustar interfaz de calibración: Se inicia con ayuda de editores de imágenes como p41nt
+- 
+    Para RECIBIR EN la MISMA PESTAÑA(BUIEN PULIDAAAAAAAAAAAA) LOS CODIGOS ESCANEADOS como los pesos están entrando por un puerto virtual entonces se simulan los códigos de barras que envía el escaner SR1000 con un fake method por el momento
+
+
+    
