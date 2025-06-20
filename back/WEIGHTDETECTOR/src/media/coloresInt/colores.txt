@@ -1,0 +1,6 @@
+botones: #F0F0F0 
+    Rojo (R): 240
+    Verde (G): 240
+    Azul (B): 240
+
+    

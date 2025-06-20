@@ -17,9 +17,7 @@ sketch es el archivo .ino que va a tener la lógica que queremos que haga el ard
     "port": "COM6"
 }
 
-
-TAREA 
-Ir mirando como hacer la aplicación de escritorio
+YA SE GENERA EL ARCHIVO .EXE
 =======
 PARA CAMBIAR LA CONFIGURACIÓN DEL ARDUINO
 - Se instala el arduino IDE
@@ -30,8 +28,8 @@ PARA CAMBIAR LA CONFIGURACIÓN DEL ARDUINO
 BIBLIOTECAS PARA APPS DE ESCRITORIO:
 https://www.youtube.com/watch?v=XgjKa9kkYjc
 >>>>>>> 6d4ff3ed4a1209c661ceb95daee5420c57fac835
+YA SE CREA UN REPORTE CON LOS PESOS DE SER NECESARIO SE PUEDE HACER LO MISMO PARA LOS CODIGOS DE BARRA
 TAREA 
-CREAR LOGS EN UNA BD(MIENTRAS EN UNA CARPETA )
 
 Ajustar interfaz de calibración: Se inicia con ayuda de editores de imágenes como p41nt
 - 

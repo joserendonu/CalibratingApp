@@ -3,6 +3,9 @@ import tkinter as tk
 import threading
 import serial
 from fake_reader import read_encrypted_fake
+#  --- nuevas importaciones ---
+import reporter                               # ← importa el módulo recién creado
+from tkinter import messagebox                # ← para avisar al usuario
 
 # ========== CONFIG ==========
 PORT = "COM4"
@@ -18,6 +21,14 @@ except serial.SerialException as e:
 # ========== DATA ==========
 serial_data = []
 encrypted_data = []
+#  --- función a invocar desde el botón ---
+def generar_reporte_ui():
+    try:
+        ruta = reporter.generar_reporte(serial_data.copy())   # ❷ copia para evitar conflictos con el hilo
+        messagebox.showinfo("Reporte creado",
+                            f"Se guardó en:\n{ruta}")
+    except Exception as e:
+        messagebox.showerror("Error al generar reporte", str(e))
 
 # ========== SERIAL FUNCTIONS ==========
 def read_serial():
@@ -113,6 +124,12 @@ txt_codigos.place(x=500, y=250)
 # BOTONES
 tk.Button(root, text="Set cero", command=set_zero, font=("Arial", 12)).place(x=50, y=400)
 tk.Button(root, text="Set escala", command=set_scale, font=("Arial", 12)).place(x=50, y=440)
+#  --- botón en la interfaz (coordenadas aproximadas) ---
+tk.Button(root,
+          text="Generar reporte",
+          command=generar_reporte_ui,
+          font=("Arial", 12)
+          ).place(x=320, y=445)                # ajusta X/Y si lo prefieres
 
 entry_escala_izq = tk.Entry(root, font=("Arial", 12), width=6, justify="right")
 entry_escala_izq.place(x=160, y=445)
