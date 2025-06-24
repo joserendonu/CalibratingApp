@@ -78,16 +78,26 @@ def set_zero():
     send_serial("set_zero")
 
 def set_scale():
-    scale = entry_escala_izq.get()
+    scale = entry_escala_izq.get().strip()
+    
+    if not scale:
+        messagebox.showwarning("Advertencia", "Por favor escribe un valor de escala.")
+        return
     send_serial(f"set_scale:{scale}")
     entry_escala_der.config(state='normal')
     entry_escala_der.delete(0, tk.END)
     entry_escala_der.insert(0, scale)
     entry_escala_der.config(state='readonly')
-
 def enviar_comando():
-    comando = entry_comando_extra.get()
+    comando = entry_comando_extra.get().strip().lower()
     send_serial(comando)
+    # Sincroniza botones si el comando es config o auto
+    if comando == "config":
+        btn_config.config(state="disabled")
+        btn_auto.config(state="normal")
+    elif comando == "auto":
+        btn_auto.config(state="disabled")
+        btn_config.config(state="normal")
 
 # ========== UI ==========
 root = tk.Tk()
@@ -142,11 +152,49 @@ entry_peso.place(x=100, y=100)
 tk.Label(root, text="Kg", font=("Arial", 14), bg="#aed6f1").place(x=170, y=100)
 
 tk.Label(root, text="Escala", font=("Arial", 14), bg="#aed6f1").place(x=20, y=140)
-entry_escala_der = tk.Entry(root, font=("Arial", 12), width=6, justify="right", state='readonly')
-entry_escala_der.insert(0, "0")
+entry_escala_der = tk.Entry(root, font=("Arial", 12), width=6, justify="right", state='readonly', readonlybackground="white", fg="black")
+entry_escala_der.insert(0, "1")  # ← aquí sí se inicializa en 1
 entry_escala_der.place(x=100, y=140)
+colorAuto = "#27ae60"
+colorConfig = "#c0392b"
 
-# PESOS RECIBIDOS
+def enviar_config():
+    entry_comando_extra.delete(0, tk.END)
+    entry_comando_extra.insert(0, "config")
+    enviar_comando()
+    btn_config.config(state="disabled")
+    btn_auto.config(state="normal")
+
+def enviar_auto():
+    entry_comando_extra.delete(0, tk.END)
+    entry_comando_extra.insert(0, "auto")
+    enviar_comando()
+    btn_auto.config(state="disabled")
+    btn_config.config(state="normal")
+
+btn_config = tk.Button(
+    root,
+    text="Config",
+    command=enviar_config,
+    font=("Arial", 12),
+    bg=colorConfig,
+    fg="white",
+    activebackground=colorConfig,
+    state="normal"
+)
+btn_config.place(x=20, y=200)
+
+btn_auto = tk.Button(
+    root,
+    text="Auto",
+    command=enviar_auto,
+    font=("Arial", 12),
+    bg=colorAuto,
+    fg="white",
+    activebackground=colorAuto,
+    state="disabled"  # Deshabilitado al inicio
+)
+btn_auto.place(x=120, y=200)
 tk.Label(root, text="Pesos recibidos",
          font=("Arial", 14), bg="#aed6f1").place(x=500, y=30)
 txt_salida = tk.Text(root, font=("Arial", 12), 
@@ -177,8 +225,13 @@ tk.Button(root, text="Enviar Comando", command=enviar_comando, font=("Arial", 12
 entry_comando_extra = tk.Entry(root, font=("Arial", 12), width=8, justify="right")
 entry_comando_extra.place(x=640, y=443)
 
+entry_escala_izq.delete(0, tk.END)
+entry_escala_izq.insert(0, "1")
+set_scale()
 # HILOS
 threading.Thread(target=read_serial, daemon=True).start()
 threading.Thread(target=lambda: read_encrypted_fake(update_codigos), daemon=True).start()
+
+
 
 root.mainloop()
