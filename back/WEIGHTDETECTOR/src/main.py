@@ -6,6 +6,8 @@ from fake_reader import read_encrypted_fake
 #  --- nuevas importaciones ---
 import reporter                               # ← importa el módulo recién creado
 from tkinter import messagebox                # ← para avisar al usuario
+from selectSerial import create_serial_combobox
+
 
 # ========== CONFIG ==========
 PORT = "COM4"
@@ -100,6 +102,32 @@ window_height = int(screen_height * 0.8)
 root.geometry(f"{window_width}x{window_height}")
 
 root.configure(bg="#aed6f1")
+selected_port_pesos = tk.StringVar(value=PORT)
+selected_port_codigos = tk.StringVar(value=PORT)
+
+# ComboBox arriba de "Pesos recibidos"
+create_serial_combobox(root, x=400, y=30, variable=selected_port_pesos)
+
+# Label y Text de "Pesos recibidos"
+tk.Label(root, text="Pesos recibidos", font=("Arial", 14), 
+         bg="#aed6f1").place(x=500, y=30)
+txt_salida = tk.Text(root, font=("Arial", 12), 
+                     width=30, height=6)
+txt_salida.place(x=400, y=60)
+
+# ComboBox arriba de "Códigos encriptados"
+create_serial_combobox(root, x=400, y=220, variable=selected_port_codigos)
+# Label y Text de "Códigos encriptados"
+tk.Label(root, text="Códigos encriptados", font=("Arial", 14), bg="#aed6f1").place(x=500, y=220)
+txt_codigos = tk.Text(root, font=("Arial", 12), width=30, height=6)
+txt_codigos.place(x=400, y=250)
+# # Para leer pesos:
+# ser_pesos = serial.Serial(selected_port_pesos.get(), "9600", timeout=1)
+
+# # Para leer códigos:
+# ser_codigos = serial.Serial(selected_port_codigos.get(), "9600", timeout=1)
+
+
 # PESO PATRÓN
 tk.Label(root, text="Peso Patrón", font=("Arial", 14), bg="#aed6f1").place(x=20, y=40)
 entry_peso_patron = tk.Entry(root, font=("Arial", 12), width=6, justify="right")
