@@ -1,5 +1,6 @@
 para ejecutar con una versión de python específica
 "C:\Users\jose\AppData\Local\Programs\Python\Python313\python.exe" --version
+LA PARTE ENTRE COMILLAS SERIA COMO EL PYTHON
 
 
 # CalibratingApp
