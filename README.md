@@ -1,4 +1,9 @@
+para ejecutar con una versión de python específica
+"C:\Users\jose\AppData\Local\Programs\Python\Python313\python.exe" --version
+
+
 # CalibratingApp
+
 CalibratingApp
 la config del arduino se toma como el back pero en si la app no tiene back
 app en angular front 
@@ -29,6 +34,7 @@ BIBLIOTECAS PARA APPS DE ESCRITORIO:
 https://www.youtube.com/watch?v=XgjKa9kkYjc
 >>>>>>> 6d4ff3ed4a1209c661ceb95daee5420c57fac835
 YA SE CREA UN REPORTE CON LOS PESOS DE SER NECESARIO SE PUEDE HACER LO MISMO PARA LOS CODIGOS DE BARRA
+
 TAREA 
 
 Ajustar interfaz de calibración: Se inicia con ayuda de editores de imágenes como p41nt
