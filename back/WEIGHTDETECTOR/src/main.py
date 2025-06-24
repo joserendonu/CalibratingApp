@@ -164,14 +164,14 @@ def enviar_config():
     enviar_comando()
     btn_config.config(state="disabled")
     btn_auto.config(state="normal")
-
+    entry_escala_izq.config(state="normal")  # ← Deshabilita input de escala
 def enviar_auto():
     entry_comando_extra.delete(0, tk.END)
     entry_comando_extra.insert(0, "auto")
     enviar_comando()
     btn_auto.config(state="disabled")
     btn_config.config(state="normal")
-
+    entry_escala_izq.config(state="disabled")    # ← Habilita input de escala
 btn_config = tk.Button(
     root,
     text="Config",
@@ -228,6 +228,7 @@ entry_comando_extra.place(x=640, y=443)
 entry_escala_izq.delete(0, tk.END)
 entry_escala_izq.insert(0, "1")
 set_scale()
+entry_escala_izq.config(state="disabled")
 # HILOS
 threading.Thread(target=read_serial, daemon=True).start()
 threading.Thread(target=lambda: read_encrypted_fake(update_codigos), daemon=True).start()
