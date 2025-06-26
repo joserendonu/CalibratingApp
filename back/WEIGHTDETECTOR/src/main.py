@@ -31,11 +31,51 @@ def abrir_puerto_pesos():
     try:
         if ser and ser.is_open:
             ser.close()
-        ser = serial.Serial(selected_port_pesos.get(), BAUDRATE, timeout=1)
-        print(f"[Serial abierto] {selected_port_pesos.get()}")
+
+        # --- Traducir valores de los Combobox a constantes de pyserial ---
+        bytesize = {
+            "5": serial.FIVEBITS,
+            "6": serial.SIXBITS,
+            "7": serial.SEVENBITS,
+            "8": serial.EIGHTBITS
+        }[selected_data_bits.get()]
+
+        parity = {
+            "None": serial.PARITY_NONE,
+            "Even": serial.PARITY_EVEN,
+            "Odd": serial.PARITY_ODD,
+            "Mark": serial.PARITY_MARK,
+            "Space": serial.PARITY_SPACE
+        }[selected_parity.get()]
+
+        stopbits = {
+            "1": serial.STOPBITS_ONE,
+            "1.5": serial.STOPBITS_ONE_POINT_FIVE,
+            "2": serial.STOPBITS_TWO
+        }[selected_stop_bits.get()]
+
+        # Control de flujo
+        flow = selected_flow_control.get()
+        xonxoff = flow == "XON/XOFF"
+        rtscts = flow == "RTS/CTS"
+        dsrdtr = flow == "DSR/DTR"
+
+        ser = serial.Serial(
+            port=selected_port_pesos.get(),
+            baudrate=int(selected_baudrate.get()),
+            bytesize=bytesize,
+            parity=parity,
+            stopbits=stopbits,
+            timeout=1,
+            xonxoff=xonxoff,
+            rtscts=rtscts,
+            dsrdtr=dsrdtr
+        )
+        print(f"[Serial abierto] {selected_port_pesos.get()} con {selected_baudrate.get()} baudios")
     except serial.SerialException as e:
         ser = None
         print(f"[Error] No se pudo abrir {selected_port_pesos.get()}: {e}")
+
 
 #  --- función a invocar desde el botón ---
 def generar_reporte_ui():
@@ -139,62 +179,79 @@ root.configure(bg="#aed6f1")
 selected_port_pesos = tk.StringVar(value=PORT)
 selected_port_codigos = tk.StringVar(value=PORT)
 
+# ===== CONFIGURACIÓN DE PARÁMETROS DE PUERTO SERIAL =====
+
+from tkinter import ttk
+
+# --- Valores posibles ---
+baudrates = ["300", "1200", "2400", "4800", "9600", "14400", "19200", "38400", "57600", "115200", "128000", "256000"]
+data_bits_options = ["5", "6", "7", "8"]
+parity_options = ["None", "Even", "Odd", "Mark", "Space"]
+stop_bits_options = ["1", "1.5", "2"]
+flow_control_options = ["None", "XON/XOFF", "RTS/CTS", "DSR/DTR"]
+
+# --- Variables seleccionadas ---
+selected_baudrate = tk.StringVar(value="9600")
+selected_data_bits = tk.StringVar(value="8")
+selected_parity = tk.StringVar(value="None")
+selected_stop_bits = tk.StringVar(value="1")
+selected_flow_control = tk.StringVar(value="None")
+
+
+# 🚀 Colocamos los comboboxes arriba
+x_base = 30
+y_base = 20
+espacio_vertical = 30
+
+ttk.Label(root, text="Baudrate:", background="#aed6f1").place(x=x_base, y=y_base)
+ttk.Combobox(root, textvariable=selected_baudrate, values=baudrates, width=10, state="readonly").place(x=120, y=y_base)
+
+ttk.Label(root, text="Data Bits:", background="#aed6f1").place(x=x_base, y=y_base + espacio_vertical)
+ttk.Combobox(root, textvariable=selected_data_bits, values=data_bits_options, width=10, state="readonly").place(x=120, y=y_base + espacio_vertical)
+
+ttk.Label(root, text="Parity:", background="#aed6f1").place(x=x_base, y=y_base + 2 * espacio_vertical)
+ttk.Combobox(root, textvariable=selected_parity, values=parity_options, width=10, state="readonly").place(x=120, y=y_base + 2 * espacio_vertical)
+
+ttk.Label(root, text="Stop Bits:", background="#aed6f1").place(x=x_base, y=y_base + 3 * espacio_vertical)
+ttk.Combobox(root, textvariable=selected_stop_bits, values=stop_bits_options, width=10, state="readonly").place(x=120, y=y_base + 3 * espacio_vertical)
+
+ttk.Label(root, text="Flow Control:", background="#aed6f1").place(x=x_base, y=y_base + 4 * espacio_vertical)
+ttk.Combobox(root, textvariable=selected_flow_control, values=flow_control_options, width=10, state="readonly").place(x=120, y=y_base + 4 * espacio_vertical)
+
+# 👇 Para que se reabra el puerto automáticamente
+for var in [selected_baudrate, selected_data_bits, selected_parity, selected_stop_bits, selected_flow_control]:
+    var.trace_add("write", lambda *args: abrir_puerto_pesos())
+
 # ComboBox arriba de "Pesos recibidos"
 create_serial_combobox(root, x=400, y=30, variable=selected_port_pesos)
 selected_port_pesos.trace_add("write", lambda *args: abrir_puerto_pesos())
 abrir_puerto_pesos()  # Abrir puerto inicial antes del hilo
 threading.Thread(target=read_serial, daemon=True).start()
-
-
-
-
-
-# # Label y Text de "Pesos recibidos"
-# tk.Label(root, text="Pesos recibidos", font=("Arial", 14), 
-#          bg="#aed6f1").place(x=500, y=30)
-# txt_salida = tk.Text(root, font=("Arial", 12), 
-#                      width=30, height=6)
-# txt_salida.place(x=400, y=60)
-
-# ComboBox arriba de "Códigos encriptados"
-# create_serial_combobox(root, x=400, y=220, variable=selected_port_codigos, state="readonly")
-
-# PARA QUE SOLO MUESTRE INFORMACIÓN
-# Importa ttk si no lo has hecho ya: from tkinter import ttk
-# label_puerto_codigos = ttk.Label(root, text="Puerto de Códigos: (No aplica)")
-# label_puerto_codigos.place(x=400, y=220)
-
-
-
-# Label y Text de "Códigos encriptados"
-# tk.Label(root, text="Códigos encriptados", font=("Arial", 14), bg="#aed6f1").place(x=500, y=220)
-# txt_codigos = tk.Text(root, font=("Arial", 12), width=30, height=6)
-# txt_codigos.place(x=400, y=250)
-# # Para leer pesos:
-# ser_pesos = serial.Serial(selected_port_pesos.get(), "9600", timeout=1)
-# combo_codigos = create_serial_combobox(root, x=400, y=220, variable=selected_port_codigos)
-# combo_codigos.config(state="readonly")
-# # Para leer códigos:
-# ser_codigos = serial.Serial(selected_port_codigos.get(), "9600", timeout=1)
-
-
+# Recargar puerto al cambiar cualquier parámetro
+# Recargar puerto al cambiar cualquier parámetro
+for var in [selected_baudrate, selected_data_bits, selected_parity, selected_stop_bits, selected_flow_control]:
+    var.trace_add("write", lambda *args: abrir_puerto_pesos())
 # PESO PATRÓN
-tk.Label(root, text="Peso Patrón", font=("Arial", 14), bg="#aed6f1").place(x=20, y=40)
+tk.Label(root, text="Peso Patrón", font=("Arial", 14), bg="#aed6f1").place(x=30, y=200)
 entry_peso_patron = tk.Entry(root, font=("Arial", 12), width=6, justify="right")
 entry_peso_patron.insert(0, "5.000")
-entry_peso_patron.place(x=140, y=42)
-tk.Label(root, text="Kg", font=("Arial", 14), bg="#aed6f1").place(x=200, y=40)
+entry_peso_patron.place(x=140, y=202)
+tk.Label(root, text="Kg", font=("Arial", 14), bg="#aed6f1").place(x=200, y=200)
+
+
 
 # PESO y ESCALA (derecha)
-tk.Label(root, text="Peso", font=("Arial", 14), bg="#aed6f1").place(x=20, y=100)
+tk.Label(root, text="Peso", font=("Arial", 14), bg="#aed6f1").place(x=30, y=240)
 entry_peso = tk.Entry(root, font=("Arial", 12), width=6, justify="right", state='readonly')
-entry_peso.place(x=100, y=100)
-tk.Label(root, text="Kg", font=("Arial", 14), bg="#aed6f1").place(x=170, y=100)
+entry_peso.place(x=100, y=240)
+tk.Label(root, text="Kg", font=("Arial", 14), bg="#aed6f1").place(x=170, y=240)
 
 tk.Label(root, text="Escala", font=("Arial", 14), bg="#aed6f1").place(x=20, y=140)
 entry_escala_der = tk.Entry(root, font=("Arial", 12), width=6, justify="right", state='readonly', readonlybackground="white", fg="black")
 entry_escala_der.insert(0, "1")  # ← aquí sí se inicializa en 1
 entry_escala_der.place(x=100, y=140)
+tk.Label(root, text="Escala", font=("Arial", 14), bg="#aed6f1").place(x=30, y=280)
+entry_escala_der.place(x=100, y=280)
 colorAuto = "#27ae60"
 colorConfig = "#c0392b"
 
@@ -222,7 +279,8 @@ btn_config = tk.Button(
     activebackground=colorConfig,
     state="normal"
 )
-btn_config.place(x=20, y=200)
+# BOTONES
+btn_config.place(x=30, y=320)
 
 btn_auto = tk.Button(
     root,
@@ -234,7 +292,7 @@ btn_auto = tk.Button(
     activebackground=colorAuto,
     state="disabled"  # Deshabilitado al inicio
 )
-btn_auto.place(x=120, y=200)
+btn_auto.place(x=130, y=320)
 tk.Label(root, text="Pesos recibidos",
          font=("Arial", 14), bg="#aed6f1").place(x=500, y=30)
 txt_salida = tk.Text(root, font=("Arial", 12), 
