@@ -1,5 +1,6 @@
 # main.py
 import tkinter as tk
+import tkinter as ttk
 import threading
 import serial
 from fake_reader import read_encrypted_fake
@@ -23,6 +24,19 @@ except serial.SerialException as e:
 # ========== DATA ==========
 serial_data = []
 encrypted_data = []
+
+# FUNCIONES
+def abrir_puerto_pesos():
+    global ser
+    try:
+        if ser and ser.is_open:
+            ser.close()
+        ser = serial.Serial(selected_port_pesos.get(), BAUDRATE, timeout=1)
+        print(f"[Serial abierto] {selected_port_pesos.get()}")
+    except serial.SerialException as e:
+        ser = None
+        print(f"[Error] No se pudo abrir {selected_port_pesos.get()}: {e}")
+
 #  --- función a invocar desde el botón ---
 def generar_reporte_ui():
     try:
@@ -34,7 +48,17 @@ def generar_reporte_ui():
 
 # ========== SERIAL FUNCTIONS ==========
 def read_serial():
-    if not ser:
+    while True:
+        try:
+            if ser and ser.is_open:
+                line = ser.readline().decode('utf-8').strip()
+                if line:
+                    update_pesos(line)
+            else:
+                threading.Event().wait(0.1)  # espera corta para no bloquear CPU
+        except Exception as e:
+            print("[serial_reader error]:", e)  
+    if not ser: 
         return
     while True:
         try:
@@ -117,23 +141,39 @@ selected_port_codigos = tk.StringVar(value=PORT)
 
 # ComboBox arriba de "Pesos recibidos"
 create_serial_combobox(root, x=400, y=30, variable=selected_port_pesos)
+selected_port_pesos.trace_add("write", lambda *args: abrir_puerto_pesos())
+abrir_puerto_pesos()  # Abrir puerto inicial antes del hilo
+threading.Thread(target=read_serial, daemon=True).start()
 
-# Label y Text de "Pesos recibidos"
-tk.Label(root, text="Pesos recibidos", font=("Arial", 14), 
-         bg="#aed6f1").place(x=500, y=30)
-txt_salida = tk.Text(root, font=("Arial", 12), 
-                     width=30, height=6)
-txt_salida.place(x=400, y=60)
+
+
+
+
+# # Label y Text de "Pesos recibidos"
+# tk.Label(root, text="Pesos recibidos", font=("Arial", 14), 
+#          bg="#aed6f1").place(x=500, y=30)
+# txt_salida = tk.Text(root, font=("Arial", 12), 
+#                      width=30, height=6)
+# txt_salida.place(x=400, y=60)
 
 # ComboBox arriba de "Códigos encriptados"
-create_serial_combobox(root, x=400, y=220, variable=selected_port_codigos)
+# create_serial_combobox(root, x=400, y=220, variable=selected_port_codigos, state="readonly")
+
+# PARA QUE SOLO MUESTRE INFORMACIÓN
+# Importa ttk si no lo has hecho ya: from tkinter import ttk
+# label_puerto_codigos = ttk.Label(root, text="Puerto de Códigos: (No aplica)")
+# label_puerto_codigos.place(x=400, y=220)
+
+
+
 # Label y Text de "Códigos encriptados"
-tk.Label(root, text="Códigos encriptados", font=("Arial", 14), bg="#aed6f1").place(x=500, y=220)
-txt_codigos = tk.Text(root, font=("Arial", 12), width=30, height=6)
-txt_codigos.place(x=400, y=250)
+# tk.Label(root, text="Códigos encriptados", font=("Arial", 14), bg="#aed6f1").place(x=500, y=220)
+# txt_codigos = tk.Text(root, font=("Arial", 12), width=30, height=6)
+# txt_codigos.place(x=400, y=250)
 # # Para leer pesos:
 # ser_pesos = serial.Serial(selected_port_pesos.get(), "9600", timeout=1)
-
+# combo_codigos = create_serial_combobox(root, x=400, y=220, variable=selected_port_codigos)
+# combo_codigos.config(state="readonly")
 # # Para leer códigos:
 # ser_codigos = serial.Serial(selected_port_codigos.get(), "9600", timeout=1)
 
@@ -230,7 +270,7 @@ entry_escala_izq.insert(0, "1")
 set_scale()
 entry_escala_izq.config(state="disabled")
 # HILOS
-threading.Thread(target=read_serial, daemon=True).start()
+# threading.Thread(target=read_serial, daemon=True).start()
 threading.Thread(target=lambda: read_encrypted_fake(update_codigos), daemon=True).start()
 
 
