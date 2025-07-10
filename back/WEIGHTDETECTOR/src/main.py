@@ -246,7 +246,6 @@ entry_peso = tk.Entry(root, font=("Arial", 12), width=6, justify="right", state=
 entry_peso.place(x=100, y=240)
 tk.Label(root, text="Kg", font=("Arial", 14), bg="#aed6f1").place(x=170, y=240)
 
-tk.Label(root, text="Escala", font=("Arial", 14), bg="#aed6f1").place(x=20, y=140)
 entry_escala_der = tk.Entry(root, font=("Arial", 12), width=6, justify="right", state='readonly', readonlybackground="white", fg="black")
 entry_escala_der.insert(0, "1")  # ← aquí sí se inicializa en 1
 entry_escala_der.place(x=100, y=140)
