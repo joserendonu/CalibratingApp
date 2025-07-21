@@ -8,6 +8,7 @@ import reporter
 from tkinter import messagebox
 from selectSerial import create_serial_combobox
 from codigo_reader import read_codigos_serial
+from selectSerialCodigos import create_codigos_serial_selector
 
 # ========== CONFIG ==========
 
@@ -189,6 +190,11 @@ root.geometry(f"{window_width}x{window_height}")
 root.configure(bg="#aed6f1")
 selected_port_pesos = tk.StringVar(value=PORT)
 selected_port_codigos = tk.StringVar(value="COM5")  # Por defecto diferente
+selected_port_codigos.trace_add("write", lambda *args: update_puertos_pesos())
+
+def update_puertos_pesos():
+    create_serial_combobox(tab_main, x=400, y=10, variable=selected_port_pesos, exclude_port=selected_port_codigos.get())
+
 
 # ===== CONFIGURACIÓN DE PARÁMETROS DE PUERTO SERIAL =====
 
@@ -206,8 +212,10 @@ selected_flow_control = tk.StringVar(value="None")
 
 # --- Widgets de configuración en tab_serial ---
 x_base = 30
-y_base = 20
+y_base = 30
 espacio_vertical = 30
+
+ttk.Label(tab_serial, text="PESOS:", background="#aed6f1").place(x=x_base, y=5)
 
 ttk.Label(tab_serial, text="Baudrate:", background="#aed6f1").place(x=x_base, y=y_base)
 ttk.Combobox(tab_serial, textvariable=selected_baudrate, values=baudrates, width=10, state="readonly").place(x=120, y=y_base)
@@ -224,7 +232,7 @@ for var in [selected_baudrate, selected_data_bits, selected_parity, selected_sto
     var.trace_add("write", lambda *args: abrir_puerto_pesos())
 
 # ComboBox arriba de "Pesos recibidos"
-create_serial_combobox(tab_main, x=400, y=10, variable=selected_port_pesos)
+create_serial_combobox(tab_main, x=400, y=10, variable=selected_port_pesos, exclude_port=selected_port_codigos.get())
 selected_port_pesos.trace_add("write", lambda *args: abrir_puerto_pesos())
 abrir_puerto_pesos()  # Abrir puerto inicial antes del hilo
 # Solo lanza el hilo si el puerto se abrió correctamente
@@ -308,6 +316,14 @@ txt_codigos.place(x=400, y=150)
 tk.Label(tab_main, text="Códigos reales", font=("Arial", 14), bg="#aed6f1").place(x=500, y=210)
 txt_codigos_reales = tk.Text(tab_main, font=("Arial", 12), width=30, height=3)
 txt_codigos_reales.place(x=400, y=240)
+# ====== Selector para puerto de códigos reales ======
+ttk.Label(tab_serial, text="CÓDIGOS:", background="#aed6f1").place(x=300, y=0)
+create_codigos_serial_selector(
+    tab_serial,
+    x=300,
+    y=20,
+    variable_port=selected_port_codigos
+)
 
 # BOTONES
 tk.Button(tab_main, text="Set cero", command=set_zero, font=("Arial", 12)).place(x=50, y=300)
